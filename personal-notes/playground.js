@@ -1,3 +1,5 @@
+// I use this file for rough workings & to test various things in javascript
+
 import { useState } from 'react'
 
 const App = () => {
