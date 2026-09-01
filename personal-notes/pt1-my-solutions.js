@@ -45,19 +45,21 @@ import { useState } from 'react'
 const Toggler = () => {
   const [isOn, setIsOn] = useState(false)
 
-  const handleToggle = () => {
-    return
-    setIsOn(true)
-    // TODO: Write state update logic here
+  const handleToggle = () => setIsOn(!isOn)
     // Pseudocode: if true set false, if false set true
-  }
-
   return (
     <button onClick={handleToggle}>
       {isOn ? 'ON' : 'OFF'}
     </button>
   )
 }
+
+// Exercise 2.3 Correct Object State Updates
+const [player, setPlayer] = useState({name:'Leo', health: 100})
+
+const handleTakeDamage  = () => {
+     setPlayer({ ...player, health: player.health - 10 })
+};
 
 //Topic 3
 
