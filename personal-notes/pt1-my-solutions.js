@@ -61,6 +61,32 @@ const handleTakeDamage  = () => {
      setPlayer({ ...player, health: player.health - 10 })
 };
 
+
+// Exercise 2.4 Tracing Execution & Re-renders
+
+const App = () => {
+    const [count, setCount] = useState(0)
+    console.log('Component rendered', count)
+
+    const handleClick = () => {
+      // prevState is better to use on multiple actions on count instead of setCount(count+1)
+        setCount(prevState => prevState + 1)
+    }
+
+    return <button onClick={handleClick}>Count: {count}</button>
+}
+
+// Exercise 2.5: Multiple Reset Handlers
+//Write a single handler function handleResetAll that resets both counters to 0.
+
+const [leftClicks, setLeftClicks] = useState(5)
+const [rightClicks, setRightClicks] = useState(8)
+
+const handleResetAll = () => {
+  setLeftClicks(0)
+  setRightClicks(0)
+}
+
 //Topic 3
 
 
