@@ -212,3 +212,64 @@ const App = () => {
 }
 ```
 List the **sub-components** you would break this into, and state what **props** each new sub-component would need to receive.
+
+---
+
+### Topic 3 Extra Practice — Repeat Reps
+
+Two more in the style of 3.1 (data down, destructuring) and two more in the style of 3.2 (actions up, event handler as prop). Do these cold in `playground.jsx`, without looking at your 3.1/3.2 answers.
+
+#### Exercise 3.6: A Second Data-Down Component
+Write a functional component called `ProfileCard` that:
+1. Destructures `username` and `bio` directly from props.
+2. Renders an `<h3>` containing `username` and a `<p>` containing `bio`.
+
+#### Exercise 3.7: A Third Data-Down Component
+Write a functional component called `PriceTag` that:
+1. Destructures `productName` and `price` directly from props.
+2. Renders a `<span>` containing `productName` and a `<strong>` containing `price`, formatted with a `$` prefix (e.g. `$25`).
+
+#### Exercise 3.8: A Second Actions-Up Component
+Write a functional component called `LikeButton` that receives two props: `itemName` (a string) and `onLike` (a function). It should render an HTML `<button>` that executes `onLike` when clicked and displays the text `"Like {itemName}"` (e.g. `"Like Pizza"`).
+
+#### Exercise 3.9: A Third Actions-Up Component
+Write a functional component called `DeleteButton` that receives two props: `itemName` (a string) and `onDelete` (a function). It should render an HTML `<button>` that executes `onDelete` when clicked and displays the fixed text `"Delete"` — note `itemName` is received but not shown in the button's text.
+
+---
+
+### Micro-Drill: "Now vs Later" (the real bottleneck behind 2.1, 3.2, 3.4)
+
+The single skill under almost every bug hit in Topic 2 and Topic 3: **does this line run the function immediately, or does it just hand over a function to be run later, by something else, when triggered?**
+
+Core rule: a function name **with** `()` right after it runs immediately. A function name **without** `()` — or wrapped inside `() => ...` — does not run until something else calls it later. Anything written *inside* a `() => ...` box is sealed off and doesn't count as "running now," no matter what `()` appear inside it — only the outermost layer of the line matters.
+
+For each line below, answer **now** or **later**:
+
+1. `onClick={handleClick}`
+2. `onClick={handleClick()}`
+3. `onClick={() => handleClick(5)}`
+4. `const age = calculateAge(1990)`
+5. `const fn = calculateAge`
+6. `rawPrices.map(p => \`$${p}\`)`
+7. `setTimeout(() => console.log("hi"), 1000)`
+8. `setCounter(counter + 1)`
+9. `setCounter(prevState => prevState + 1)`
+10. `<button onClick={() => {}}>Click</button>` — does clicking this do anything?
+
+<details>
+<summary>Answers (click to expand)</summary>
+
+1. **Later** — bare function reference, React calls it on click.
+2. **Now** — `()` calls it immediately, during render, not on click.
+3. **Later** — sealed inside `() => ...`; `handleClick(5)` only runs once the wrapper itself is called (on click).
+4. **Now** — `calculateAge(1990)` runs immediately; `age` gets the returned value.
+5. **Later** (technically: "not yet, only if/when `fn()` is called somewhere else) — no `()`, so this just copies the function itself, unexecuted.
+6. **Later**, once per array item — `.map()` calls `p => \`$${p}\`` itself, internally, for every item in the array. Same "hand over a function" idea, just called by `.map()` instead of a click.
+7. **Later** — `console.log("hi")` is sealed inside `() =>`; `setTimeout` calls that wrapper after the 1000ms delay, not immediately.
+8. **Now** — `counter + 1` is computed immediately, before being handed to `setCounter`.
+9. **Later** (for the addition itself) — `prevState => prevState + 1` is a function, not a computed number yet; React runs the addition later, whenever it actually processes the update. (Calling `setCounter` itself always happens "now" in both #8 and #9 — the difference is whether the *value passed in* is already computed or is a deferred recipe.)
+10. **Yes, something runs** — clicking calls the function. It just happens to contain zero instructions (`{}` is empty), so nothing visible happens. "Later" means "whatever's written runs when triggered," even if what's written is nothing.
+
+</details>
+
+**Related note — template literals, for review:** `` `$${p}` `` uses backticks (not `'` or `"`), which support `${expression}` — insert a value directly into a string. The `$` right before `${p}` is just a literal dollar-sign character; it has nothing to do with the `${}` syntax, it's a coincidence of both using `$`. Equivalent to `"$" + p`, and the same idea as Python's f-strings (`f"Hello {name}"` vs JS's `` `Hello ${name}` ``).

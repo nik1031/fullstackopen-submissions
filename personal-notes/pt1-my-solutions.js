@@ -87,6 +87,84 @@ const handleResetAll = () => {
   setRightClicks(0)
 }
 
-//Topic 3
+//Topic 3: Component Architecture ("Data Down, Actions Up")
 
+// Exercise 3.1: Creating a Clean Child Component
+const props = {
+  title : "Hello",
+  subtitle : "welcome back"
+}
 
+const Header = ({title, subtitle}) => {
+  return (<>
+  <h1>
+    {title}
+  </h1>
+  <h2>
+    {subtitle}
+  </h2>
+  </>
+  )};
+
+const App = () => {
+    return (<Header {...props} ></Header>)
+}
+
+// Exercise 3.2 Passing an Event Handler as a Prop
+const text_to_render = "You Clicked Me"
+
+const ActionButton = ({ onPress, label }) => <button onClick={onPress}>{label}</button>
+
+const App = () => {
+  const handleClick = () => console.log("clicked")
+
+    return (
+    <ActionButton label={text_to_render} onPress={handleClick} />
+  )
+}
+
+// Exercise 3.3 Wiring Parent and Child
+const ChildDisplayAndButton = ({ value, onIncrement }) => (
+  <div>
+    <p>Value: {value}</p>
+    <button onClick={onIncrement}>+1</button>
+  </div>
+)
+
+const Parent = () => {
+  const [counter, setCounter] = useState(0)
+
+  setCounter(prevState => { 
+    //return has been removed as prevState + 1 is the only output
+    prevState + 1
+  })
+
+  return (
+    <div>
+      <ChildDisplayAndButton value={counter} onIncrement={handleIncrement}></ChildDisplayAndButton>
+    </div>
+  )
+}
+
+// Exercise 3.4 Passing Data UP from Child to Parent
+const AddPointsButton = ({ onAdd }) => {
+  return (
+    // TODO: Write onClick so it calls onAdd(5)
+    <button onClick={() => onAdd(5)}>
+      +5
+    </button>
+  )
+}
+
+// Exercise 3.5: Identifying Component Boundaries - TODO
+const App = () => {
+  const [temperature, setTemperature] = useState(20)
+
+  return (
+    <div>
+      <div className="temp-display">Current Temp: {temperature}°C</div>
+      <button onClick={() => setTemperature(temperature + 1)}>Warmer</button>
+      <button onClick={() => setTemperature(temperature - 1)}>Colder</button>
+    </div>
+  )
+}

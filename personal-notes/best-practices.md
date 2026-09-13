@@ -12,3 +12,15 @@ This is a collection of best practices and coding conventions for fullstack Java
 - Use prefixes for boolean variables (e.g., `isLoading`, `hasError`) to indicate their type
 - Use suffixes for event handler functions (e.g., `onClick`, `onSubmit`) to indicate their purpose
 - Use kebab-case for file and folder names (e.g., `my-component.js`, `my-folder`)
+
+### React State Updates
+- When a new state value depends on the previous one, prefer the updater-function form over reading the state variable directly:
+  ```jsx
+  // Prefer:
+  setCount(prevCount => prevCount + 1)
+
+  // Over:
+  setCount(count + 1)
+  ```
+- Why: `count` inside a handler can be a stale snapshot from the render it was created in. `setCount(count + 1)` reads that snapshot, which is safe for a single update but risks using outdated values if multiple updates to the same state happen close together (e.g. called twice before a re-render, or inside a loop/async callback). `prevCount => prevCount + 1` always receives React's latest known state value at the time it actually runs, avoiding that risk.
+- Applies to any state update that's a function of the current value — increments, toggles, appending to a list, etc.
