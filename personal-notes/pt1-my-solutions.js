@@ -131,14 +131,15 @@ const ChildDisplayAndButton = ({ value, onIncrement }) => (
   </div>
 )
 
+
+
 const Parent = () => {
   const [counter, setCounter] = useState(0)
 
-  setCounter(prevState => { 
-    //return has been removed as prevState + 1 is the only output
-    prevState + 1
-  })
-
+  const handleIncrement = () => {
+    setCounter(prevState => prevState + 1)
+  }
+  
   return (
     <div>
       <ChildDisplayAndButton value={counter} onIncrement={handleIncrement}></ChildDisplayAndButton>
