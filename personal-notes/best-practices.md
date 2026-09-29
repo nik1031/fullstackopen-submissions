@@ -24,3 +24,5 @@ This is a collection of best practices and coding conventions for fullstack Java
   ```
 - Why: `count` inside a handler can be a stale snapshot from the render it was created in. `setCount(count + 1)` reads that snapshot, which is safe for a single update but risks using outdated values if multiple updates to the same state happen close together (e.g. called twice before a re-render, or inside a loop/async callback). `prevCount => prevCount + 1` always receives React's latest known state value at the time it actually runs, avoiding that risk.
 - Applies to any state update that's a function of the current value — increments, toggles, appending to a list, etc.
+
+- Do not define components inside another component. This prevents React optimisation as nested components are always treated as "new component" - Fullstackopen pt1d

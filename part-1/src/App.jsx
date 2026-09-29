@@ -1,61 +1,44 @@
+import { useState} from 'react'
 
-
-
-import {useState} from 'react'
-
-
-const Display = ({ counter }) => <div>{counter}</div>
-
-
-const History = (props) => {
-  if (props.allClicks.length === 0) {
-    return (
-      <div>
-        the app is used by pressing the buttons
-      </div>
-    )
+const Button = (props) => {
+  const handleClick = () => {
+    console.log(props.text, ' button was clicked')
+    props.onClick()
   }
+  
+  return <button onClick={handleClick}>{props.text}</button>
+}
+
+const Display = ({text}) => {
+    return <p>{text}</p>
+}
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  
+  const all = good + neutral + bad
+  const average = (good - bad) / all
+  const positive = (good / all) * 100
+
   return (
     <div>
-      button press history: {props.allClicks.join(' ')}
+      <h1>Give feedback</h1>
+      <Button onClick={() => setGood(good+1)} text="Good"/>
+      <Button onClick={() => setNeutral(neutral+1)} text="Neutral"/>
+      <Button onClick={() => setBad(bad+1)} text="Bad"/>
+      <h1>Statistics</h1>
+      <Display text={'good ' + good}></Display>
+      <Display text={'neutral ' + neutral}></Display>
+      <Display text={'bad ' + bad}></Display>
+      <Display text={'all ' + all}></Display>
+      <Display text={'average ' + average}></Display>
+      <Display text={'positive ' + positive + '%'}></Display>
     </div>
   )
 }
+// Completed 1.7, currently on exercise 1.8
 
-const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
-
-const App = () => {
-  const [left, setLeft] = useState(0)
-  const [right, setRight] = useState(0)
-  const [allClicks, setAll] = useState([])
-  const [total, setTotal] = useState(0)
-
-  const handleLeftClick = () => {
-    setAll(allClicks.concat('L'))
-    console.log('left before', left)
-    const updatedLeft = left + 1
-    setLeft(updatedLeft)
-    console.log('left after', left)
-    setTotal(updatedLeft + right) 
-  }
-
-  const handleRightClick = () => {
-    setAll(allClicks.concat('R'))
-    setRight(right + 1)
-    setTotal(left + right)
-  }
-
-  return (
-    <div>
-      {left}
-      <Button onClick={handleLeftClick} text='left' />
-      <Button onClick={handleRightClick} text='right' />
-      {right}
-      <p>{allClicks.join(' ')}</p>
-      <p>total {total}</p>
-       <History allClicks={allClicks} />
-    </div>
-  )
-} 
-// Paused at Rules of Hooks section of Part1d
 export default App
